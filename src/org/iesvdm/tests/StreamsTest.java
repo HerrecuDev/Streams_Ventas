@@ -25,6 +25,8 @@ import org.iesvdm.streams.Pedido;
 import org.iesvdm.streams.PedidoHome;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
+
 class StreamsTest {
 
 	@Test
@@ -113,10 +115,14 @@ class StreamsTest {
 			//PISTA: Generación por sdf de fechas
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date ultimoDia2016 = sdf.parse("2016-12-31");
+            Date PrimerDia2018 = sdf.parse("2018-01-01");
 			
 			List<Pedido> list = pedHome.findAll();
 				
-			//TODO STREAMS	
+			List<Integer>  l = list.stream().filter(pedido -> pedido.getFecha().after(ultimoDia2016) &&  pedido.getFecha().before(PrimerDia2018) && pedido.getTotal() >= 500)
+                            .map( p-> p.getId()).toList();
+
+            l.forEach(System.out::println);
 						
 			pedHome.commitTransaction();
 		}
@@ -142,7 +148,8 @@ class StreamsTest {
 	
 			List<Cliente> list = cliHome.findAll();
 			
-			//TODO STREAMS		
+			var listado = list.stream().filter(p-> p.getPedidos().isEmpty());
+            listado.forEach(System.out::println);
 		
 			cliHome.commitTransaction();
 			
@@ -166,7 +173,15 @@ class StreamsTest {
 		
 			List<Comercial> list = comHome.findAll();		
 			
-			//TODO STREAMS		
+			Optional<Comercial> optionalCOmercial = list.stream().max(comparing(comercial -> comercial.getComisión()));
+
+            optionalCOmercial.ifPresentOrElse(comerical -> System.out.println(comerical.getNombre()
+
+                                            + " comision max "
+                                            + comerical.getComisión()),
+                    () -> System.out.println("no hay comerciales en la lista")
+
+            );
 				
 			comHome.commitTransaction();
 			

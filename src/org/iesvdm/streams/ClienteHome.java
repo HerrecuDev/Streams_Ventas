@@ -23,6 +23,7 @@ public class ClienteHome {
 		try {
 			return new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
 		} catch (Exception e) {
+            e.printStackTrace();
 			throw new IllegalStateException("No puedo crear SessionFactory");
 		}
 	}
