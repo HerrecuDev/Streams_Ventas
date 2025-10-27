@@ -518,15 +518,15 @@ class StreamsTest {
 	@Test
 	void test16() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-						
-			
+
+
 			//TODO STREAMS
-			
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -554,17 +554,17 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	void test17() {
 		
 		ClienteHome cliHome = new ClienteHome();
-		
+
 		try {
 			cliHome.beginTransaction();
-	
+
 			List<Cliente> list = cliHome.findAll();
-			
+
 			//TODO STREAMS
-			
-			
+
+
 			cliHome.commitTransaction();
-			
+
 		}
 		catch (RuntimeException e) {
 			cliHome.rollbackTransaction();
@@ -581,22 +581,22 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test18() {
 		
-		ComercialHome comHome = new ComercialHome();	
+		ComercialHome comHome = new ComercialHome();
 		try {
-		
+
 			comHome.beginTransaction();
-			
-			List<Comercial> list = comHome.findAll();		
-		
-			
+
+			List<Comercial> list = comHome.findAll();
+
+
 			comHome.commitTransaction();
-			
+
 		}
 		catch (RuntimeException e) {
 			comHome.rollbackTransaction();
 		    throw e; // or display error message
 		}
-		
+
 	}
 	
 	/**
@@ -606,16 +606,16 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test19() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-						
-			
+
+
 			//TODO STREAMS
-			
-			
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -631,18 +631,18 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test20() {
 		
-		ComercialHome comHome = new ComercialHome();	
+		ComercialHome comHome = new ComercialHome();
 		try {
-		
+
 			comHome.beginTransaction();
-			
-			List<Comercial> list = comHome.findAll();		
-		
+
+			List<Comercial> list = comHome.findAll();
+
 			//TODO STREAMS
-			
-			
+
+
 			comHome.commitTransaction();
-			
+
 		}
 		catch (RuntimeException e) {
 			comHome.rollbackTransaction();
@@ -657,15 +657,15 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test21() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-						
+
 			//TODO STREAMS
-			
-			
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -680,16 +680,16 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test22() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
-			List<Pedido> list = pedHome.findAll();
-						
-			//TODO STREAMS
-			
 
-			
+			List<Pedido> list = pedHome.findAll();
+
+			//TODO STREAMS
+
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -706,17 +706,17 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	void test23() {
 		
 		ClienteHome cliHome = new ClienteHome();
-		
+
 		try {
 			cliHome.beginTransaction();
-	
+
 			List<Cliente> list = cliHome.findAll();
-			
+
 			//TODO STREAMS
-			
-			
+
+
 			cliHome.commitTransaction();
-			
+
 		}
 		catch (RuntimeException e) {
 			cliHome.rollbackTransaction();
@@ -737,14 +737,14 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test24() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-						
+
 			//TODO STREAMS
-			
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -761,15 +761,15 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test25() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-					
+
 			//TODO STREAMS
-			
-			
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -787,21 +787,21 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	void test26() throws ParseException {
 		
 		ClienteHome cliHome = new ClienteHome();
-		
+
 		try {
 			cliHome.beginTransaction();
-	
+
 			List<Cliente> list = cliHome.findAll();
 			//PISTA: Generación por sdf de fechas
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date ultimoDia2016 = sdf.parse("2016-12-31");
 			Date primerDia2018 = sdf.parse("2018-01-01");
-			
+
 			//TODO STREAMS
-			
-			
+
+
 			cliHome.commitTransaction();
-			
+
 		}
 		catch (RuntimeException e) {
 			cliHome.rollbackTransaction();
@@ -817,18 +817,18 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test27() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-					
+
 			Calendar calendar = Calendar.getInstance();
-			
-			
+
+
 			//TODO STREAMS
-					
-					
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -844,18 +844,18 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test28() {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-					
+
 			Calendar calendar = Calendar.getInstance();
-			
+
 			//TODO STREAMS
-					
-							
-					
+
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -873,20 +873,20 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test29() throws ParseException {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
 			pedHome.beginTransaction();
-		
+
 			List<Pedido> list = pedHome.findAll();
-					
+
 			//PISTA: Generación por sdf de fechas
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date ultimoDia2018 = sdf.parse("2018-12-31");
 			Date primerDia2020 = sdf.parse("2020-01-01");
-			
+
 			//TODO STREAMS
-			
-				
+
+
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
@@ -903,19 +903,12 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 	@Test
 	void test30() throws ParseException {
 		
-		PedidoHome pedHome = new PedidoHome();	
+		PedidoHome pedHome = new PedidoHome();
 		try {
-			pedHome.beginTransaction();
-		
-			List<Pedido> list = pedHome.findAll();
-			
-			//TODO STREAMS
-				
-			pedHome.commitTransaction();
+
 		}
 		catch (RuntimeException e) {
-			pedHome.rollbackTransaction();
-		    throw e; // or display error message
+
 		}
 	}
 	

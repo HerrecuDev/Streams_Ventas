@@ -3,7 +3,7 @@
   <groupId>recu_examen1</groupId>
   <artifactId>recu_examen1</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
+
   	<dependencies>
 
         <dependency>
@@ -25,8 +25,8 @@
 		</dependency>
 
 	</dependencies>
-  
-  
+
+
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
