@@ -13,3 +13,6 @@
 -- El listado deberá estar ordenado alfabéticamente por apellidos y nombre.
 
     SELECT c.id as identificador , c.nombre as nombre_CLiente , c.apellido1 as primer_Apellido FROM cliente c WHERE c.apellido2 IS NOT NULL ORDER BY   c.apellido1 ASC , c.nombre ASC;
+
+
+--
