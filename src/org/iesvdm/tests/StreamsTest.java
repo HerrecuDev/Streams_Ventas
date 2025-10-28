@@ -152,6 +152,8 @@ class StreamsTest {
 			
 			var listado = list.stream().filter(p-> p.getPedidos().isEmpty());
             listado.forEach(System.out::println);
+
+
 		
 			cliHome.commitTransaction();
 			
@@ -211,6 +213,16 @@ class StreamsTest {
 			
 			//TODO STREAMS
 
+            var listado = list.stream()
+                            .filter(c-> c.getApellido2() != null)
+                                    .map(c -> c.getId() + " " + c.getNombre() + " " + c.getApellido1())
+                                            .toList();
+
+
+            listado.forEach(s -> System.out.println(s));
+
+            Assertions.assertEquals(8, listado.size());
+
 
 			
 			cliHome.commitTransaction();
@@ -237,6 +249,21 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
+
+            var listadoTerminaEn = list.stream()
+
+                            .filter(c -> c.getNombre().endsWith("el") || c.getNombre().endsWith("o"))
+                                    .map(c -> c.getNombre())
+                                        .distinct()
+                                            .toList();
+
+
+            listadoTerminaEn.forEach(s -> System.out.println(s));
+
+            Assertions.assertEquals(5 , listadoTerminaEn.size());
+
+
+
 			
 			comHome.commitTransaction();
 		}
@@ -261,15 +288,30 @@ class StreamsTest {
 			List<Pedido> list = pedHome.findAll();
 						
 			//TODO STREAMS
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
+            Date ultimoDia2016 = sdf.parse("2016-12-31");
+            Date primerDia2018 = sdf.parse("2018-01-01");
+
+
+
+            var listadoClientes = list.stream()
+                            .filter(p -> p.getFecha().after(ultimoDia2016) && p.getFecha().before(primerDia2018) && p.getTotal() >= 300 && p.getTotal() <= 1000)
+                                    .map(p-> p.getCliente())
+                                            .toList();
+
+            listadoClientes.forEach(s-> System.out.println(s));
 		
 			pedHome.commitTransaction();
 		}
 		catch (RuntimeException e) {
 			pedHome.rollbackTransaction();
 		    throw e; // or display error message
-		}
-		
-	}
+		} catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 	
 	
 	/**
@@ -287,7 +329,17 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
-            var mediadelTotalPedidos = list.stream();
+            var mediadelTotalPedidos = list.stream()
+                            .filter(c -> c.getNombre().equalsIgnoreCase("Daniel") && c.getApellido1().equalsIgnoreCase("Sáez"))
+                                    .flatMap(c -> (Stream<Pedido>) c.getPedidos().stream())
+                                            .mapToDouble(Pedido::getTotal)
+                                                    .average()
+                                                            .orElse(0.0);
+
+            //Assertions.assertEquals();
+
+            System.out.println("La media total de todos los pedidos de este comerical es = " + mediadelTotalPedidos);
+
 
 
 			
@@ -317,6 +369,14 @@ class StreamsTest {
 			List<Pedido> list = pedHome.findAll();
 						
 			//TODO STREAMS
+
+            var pedidosOrdenados = list.stream()
+                            .sorted((comparing(p -> p.getFecha(), reverseOrder())))
+                                    .map(p-> p.getId() + " " + p.getFecha())
+                                            .toList();
+            pedidosOrdenados.forEach(s -> System.out.println(s));
+
+            Assertions.assertEquals(16 , pedidosOrdenados.size());
 			
 			
 			pedHome.commitTransaction();
@@ -341,6 +401,15 @@ class StreamsTest {
 			List<Pedido> list = pedHome.findAll();
 						
 			//TODO STREAMS
+            var datosDeLosDosPedidosMayorValor = list.stream()
+                            .sorted(comparing(p -> p.getTotal() ,reverseOrder()))
+                                    .map(p -> "Pedido con mayor valor con id = " + p.getId() + " tiene un valor total de = " + p.getTotal())
+                                            .limit(2)
+                                                    .toList();
+
+            datosDeLosDosPedidosMayorValor.forEach(s-> System.out.println(s));
+
+            Assertions.assertEquals(2 , datosDeLosDosPedidosMayorValor.size());
 			
 			pedHome.commitTransaction();
 		}
@@ -366,6 +435,14 @@ class StreamsTest {
 						
 			
 			//TODO STREAMS
+            var listadoIdentificador = list.stream()
+                            .map( p ->  p.getCliente().getId())
+                                    .distinct()
+                                            .toList();
+
+            listadoIdentificador.forEach(s -> System.out.println(s));
+            Assertions.assertEquals(8, listadoIdentificador.size());
+
 			
 			pedHome.commitTransaction();
 		}
@@ -391,6 +468,13 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
+            var listadoNombreComerciales = list.stream()
+                            .filter(c -> c.getComisión() > 0.05 && c.getComisión() < 0.11)
+                                    .map(c-> c.getNombre() + " " +  c.getApellido1())
+                                            .toList();
+
+            listadoNombreComerciales.forEach(s -> System.out.println(s));
+            Assertions.assertEquals(3 , listadoNombreComerciales.size());
 			
 			comHome.commitTransaction();
 			
@@ -419,6 +503,16 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
+
+            var comisionMenorValor = list.stream()
+                            .sorted(comparing((Comercial c) -> c.getComisión()))
+                                .limit(1)
+                                    .map(c -> c.getComisión())
+                                        .toList();
+
+            comisionMenorValor.forEach(s -> System.out.println(s));
+            Assertions.assertEquals(1, comisionMenorValor.size());
+
 			
 			
 			comHome.commitTransaction();
@@ -517,7 +611,13 @@ class StreamsTest {
 			List<Cliente> list = cliHome.findAll();
 			
 			//TODO STREAMS
-			
+			var listadoClientes = list.stream()
+                            .filter(c -> !c.getNombre().startsWith("A"))
+                                .sorted(comparing((Cliente c) -> c.getNombre() + c.getApellido1() + c.getApellido2()))
+                                    .map(c -> c.getNombre() + " " + c.getApellido1() + " " + c.getApellido2())
+                                            .toList();
+
+            listadoClientes.forEach(s -> System.out.println(s));
 			
 			cliHome.commitTransaction();
 			
@@ -570,23 +670,15 @@ class StreamsTest {
 	}
 	
 	/**
-	 * 17. Devuelve un listado que muestre todos los pedidos que ha realizado cada cliente. 
-	 * El resultado debe mostrar todos los datos del cliente primero junto con un sublistado de sus pedidos. 
+	 * 17. Devuelve un listado que muestre todos los pedidos que ha realizado cada cliente.
+	 * El resultado debe mostrar todos los datos del cliente primero junto con un sublistado de sus pedidos.
 	 * El listado debe mostrar los datos de los clientes ordenados alfabéticamente por nombre y apellidos.
-	 * 
-Cliente [id=1, nombre=Aar�n, apellido1=Rivero, apellido2=G�mez, ciudad=Almer�a, categor�a=100]
-	Pedido [id=2, cliente=Cliente [id=1, nombre=Aar�n, apellido1=Rivero, apellido2=G�mez, ciudad=Almer�a, categor�a=100], comercial=Comercial [id=5, nombre=Antonio, apellido1=Carretero, apellido2=Ortega, comisi�n=0.12], total=270.65, fecha=2016-09-10]
-	Pedido [id=16, cliente=Cliente [id=1, nombre=Aar�n, apellido1=Rivero, apellido2=G�mez, ciudad=Almer�a, categor�a=100], comercial=Comercial [id=5, nombre=Antonio, apellido1=Carretero, apellido2=Ortega, comisi�n=0.12], total=2389.23, fecha=2019-03-11]
-	Pedido [id=15, cliente=Cliente [id=1, nombre=Aar�n, apellido1=Rivero, apellido2=G�mez, ciudad=Almer�a, categor�a=100], comercial=Comercial [id=5, nombre=Antonio, apellido1=Carretero, apellido2=Ortega, comisi�n=0.12], total=370.85, fecha=2019-03-11]
-Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, categor�a=200]
-	Pedido [id=12, cliente=Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, categor�a=200], comercial=Comercial [id=1, nombre=Daniel, apellido1=S�ez, apellido2=Vega, comisi�n=0.15], total=3045.6, fecha=2017-04-25]
-	Pedido [id=7, cliente=Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, categor�a=200], comercial=Comercial [id=1, nombre=Daniel, apellido1=S�ez, apellido2=Vega, comisi�n=0.15], total=5760.0, fecha=2015-09-10]
-	Pedido [id=3, cliente=Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, categor�a=200], comercial=Comercial [id=1, nombre=Daniel, apellido1=S�ez, apellido2=Vega, comisi�n=0.15], total=65.26, fecha=2017-10-05]
-	...
+	 *
+
 	 */
 	@Test
 	void test17() {
-		
+
 		ClienteHome cliHome = new ClienteHome();
 
 		try {
@@ -595,6 +687,13 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 			List<Cliente> list = cliHome.findAll();
 
 			//TODO STREAMS
+            var listadoPedidos = list.stream()
+                            .sorted(Comparator.comparing(Cliente ::getNombre)
+                                    .thenComparing(Cliente ::getApellido1)
+                            );
+
+
+
 
 
 			cliHome.commitTransaction();
@@ -604,7 +703,7 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 			cliHome.rollbackTransaction();
 		    throw e; // or display error message
 		}
-		
+
 	}
 	
 	/**
@@ -649,6 +748,11 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 
 			//TODO STREAMS
 
+            var listadoComerciales = list.stream()
+                            .filter(c -> c.getCliente().getId().equals(6));
+                                   // .flatMap((Comercial c ) -> c.getNombre() + c.getApellido1())
+
+
 
 			pedHome.commitTransaction();
 		}
@@ -673,6 +777,13 @@ Cliente [id=2, nombre=Adela, apellido1=Salas, apellido2=D�az, ciudad=Granada, 
 			List<Comercial> list = comHome.findAll();
 
 			//TODO STREAMS
+            var listadoComercialesSinPedidos = list.stream()
+                            .filter(c -> c.getPedidos().isEmpty())
+                                    .map(c-> "El comercial con id = " + c.getId() + " su nombre es " + c.getNombre())
+                                            .toList();
+
+            listadoComercialesSinPedidos.forEach(s-> System.out.println(s));
+
 
 
 			comHome.commitTransaction();
