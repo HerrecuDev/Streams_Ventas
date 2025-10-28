@@ -16,6 +16,7 @@ import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import org.iesvdm.streams.Cliente;
 import org.iesvdm.streams.ClienteHome;
@@ -23,6 +24,7 @@ import org.iesvdm.streams.Comercial;
 import org.iesvdm.streams.ComercialHome;
 import org.iesvdm.streams.Pedido;
 import org.iesvdm.streams.PedidoHome;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -208,6 +210,8 @@ class StreamsTest {
 			List<Cliente> list = cliHome.findAll();
 			
 			//TODO STREAMS
+
+
 			
 			cliHome.commitTransaction();
 			
@@ -283,6 +287,9 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
+            var mediadelTotalPedidos = list.stream();
+
+
 			
 			comHome.commitTransaction();
 			
@@ -442,7 +449,20 @@ class StreamsTest {
 			List<Comercial> list = comHome.findAll();		
 			
 			//TODO STREAMS
-			
+
+            var listadoNombres = list.stream()
+                            .flatMap( c-> (Stream<Pedido>) c.getPedidos().stream())
+                                    .map(c -> c.getCliente())
+                                        .sorted(comparing(c -> c.getNombre()))
+                                            .filter(c -> c.getNombre().startsWith("A") && c.getNombre().endsWith("n") || c.getNombre().startsWith("P"))
+                                                .distinct()  //De esta forma no se nos repite el nombre de cada cliente
+                                                    .toList();
+
+
+
+            listadoNombres.forEach( s -> System.out.println(s));
+            Assertions.assertEquals(4 , listadoNombres.size());
+
 			
 			comHome.commitTransaction();
 			
@@ -526,6 +546,20 @@ class StreamsTest {
 
 
 			//TODO STREAMS
+
+            var listadoCompleto = list.stream()
+                            .map(p -> p.getCliente())
+                                    .filter(c -> c.getPedidos() != null)
+                                            .distinct()
+                                                    .sorted(comparing((Cliente c) -> c.getApellido1())
+                                                            .thenComparing((Cliente c) -> c.getApellido2() == null ? "" : c.getApellido2()))
+                                                            .map(c-> c.getNombre() + " " + c.getApellido1() + " " + c.getApellido2() == null ? "" : c.getApellido2())
+                                                                    .toList();
+
+            listadoCompleto.forEach(s -> System.out.println(s));
+
+           // Assertions.assertEquals();
+
 
 			pedHome.commitTransaction();
 		}
