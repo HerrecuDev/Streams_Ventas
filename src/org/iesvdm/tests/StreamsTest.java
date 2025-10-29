@@ -684,16 +684,13 @@ class StreamsTest {
                   .sorted(Comparator.comparing(c-> c.getNombre()))
                   .map(c -> {
 
-                      List<Pedido> pedidosCLiente = new ArrayList<>(c.getPedidos());
+                      List<Pedido> pedidosCliente = new ArrayList<>(c.getPedidos());
 
 
-                      return new clientePedidos(c , pedidosCLiente);
+                      return new clientePedidos(c , pedidosCliente);
 
                   })
                           .toList();
-
-
-
 
           listado.forEach(cp -> {
               System.out.println(cp.cliente);
@@ -702,9 +699,6 @@ class StreamsTest {
 
 
           });
-
-
-
 
 			cliHome.commitTransaction();
 
@@ -730,6 +724,30 @@ class StreamsTest {
 			comHome.beginTransaction();
 
 			List<Comercial> list = comHome.findAll();
+
+            //Realizamos de nuevo un record :
+            record ComericalPedidos(Comercial comercial , List<Pedido>pedidos){}
+
+            var listado = list.stream()
+                            .sorted(Comparator.comparing(comercial -> comercial.getApellido1() ))
+                                    .map(c ->{
+
+                                        List<Pedido> pedidosDelComercial = new ArrayList<>(c.getPedidos());
+
+                                                return new ComericalPedidos(c,pedidosDelComercial);
+
+                                    })
+                                            .toList();
+
+
+            listado.forEach(cp ->{
+
+                System.out.println(cp.comercial);
+                cp.pedidos.stream()
+                        .forEach(p-> System.out.println( "\t" +p));
+
+
+            });
 
 
 			comHome.commitTransaction();
@@ -757,10 +775,18 @@ class StreamsTest {
 
 
 			//TODO STREAMS
+            var listaComercialesDelPedidodeMaria = list.stream()
+                            .filter(p-> p.getCliente().getNombre().equalsIgnoreCase("María") && p.getCliente().getApellido1().equalsIgnoreCase("Santana"))
 
-            var listadoComerciales = list.stream()
-                            .filter(c -> c.getCliente().getId().equals(6));
-                                   // .flatMap((Comercial c ) -> c.getNombre() + c.getApellido1())
+                                    .map(p-> p.getComercial().getNombre() +" " + p.getComercial().getApellido1() +" " + p.getComercial().getApellido2())
+                                        .distinct()
+                                                    .toList();
+
+            listaComercialesDelPedidodeMaria.forEach(s-> System.out.println(s));
+
+            Assertions.assertEquals(1 , listaComercialesDelPedidodeMaria.size());
+
+
 
 
 
@@ -794,6 +820,8 @@ class StreamsTest {
 
             listadoComercialesSinPedidos.forEach(s-> System.out.println(s));
 
+            Assertions.assertEquals(2 , listadoComercialesSinPedidos.size());
+
 
 
 			comHome.commitTransaction();
@@ -820,6 +848,14 @@ class StreamsTest {
 
 			//TODO STREAMS
 
+            var numeroComercialesDistintos = list.stream()
+                            .mapToDouble(p->p.getComercial().getId())
+                                    .distinct()
+                                    .count();
+
+            System.out.println("El numero total de comerciales distintos en la tabla pedido es = " + numeroComercialesDistintos);
+
+
 
 			pedHome.commitTransaction();
 		}
@@ -843,6 +879,23 @@ class StreamsTest {
 
 			//TODO STREAMS
 
+            double [] minMax = list.stream()
+                            .mapToDouble(p-> p.getTotal())
+                            .mapToObj(total -> new double []{total , total})
+                    .reduce(
+
+                                    new double[]{Double.MAX_VALUE , Double.MIN_VALUE},
+                                    (a,b) -> new double[]{
+
+                                            Math.min(a[0] , b[0]), /// Nuevo minimo
+                                            Math.max(a[1] , b[1]) //nuevo maximo
+                                    }
+
+                            );
+
+
+            System.out.println("Minimo total del pedido: " + minMax[0]);
+            System.out.println("Maximo total del pedido: " + minMax[1]);
 
 
 			pedHome.commitTransaction();
@@ -868,6 +921,12 @@ class StreamsTest {
 			List<Cliente> list = cliHome.findAll();
 
 			//TODO STREAMS
+            var categoriaMaximaPorCiudad = list.stream()
+                            .sorted(comparing(c -> c.getCategoría() ,reverseOrder()))
+                                            .map(c -> "La ciudad " +  c.getCiudad() + " tiene una categoria máxima  = " + c.getCategoría())
+                                                    .toList();
+
+            categoriaMaximaPorCiudad.forEach(s-> System.out.println(s));
 
 
 			cliHome.commitTransaction();
