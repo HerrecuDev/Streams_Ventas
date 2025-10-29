@@ -6,16 +6,7 @@ import static java.util.Comparator.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.iesvdm.streams.Cliente;
@@ -687,11 +678,30 @@ class StreamsTest {
 			List<Cliente> list = cliHome.findAll();
 
 			//TODO STREAMS
-            var listadoPedidos = list.stream()
-                            .sorted(Comparator.comparing(Cliente ::getNombre)
-                                    .thenComparing(Cliente ::getApellido1)
-                            );
+          record clientePedidos(Cliente cliente , List<Pedido> pedidos){};
 
+          var listado = list.stream()
+                  .sorted(Comparator.comparing(c-> c.getNombre()))
+                  .map(c -> {
+
+                      List<Pedido> pedidosCLiente = new ArrayList<>(c.getPedidos());
+
+
+                      return new clientePedidos(c , pedidosCLiente);
+
+                  })
+                          .toList();
+
+
+
+
+          listado.forEach(cp -> {
+              System.out.println(cp.cliente);
+              cp.pedidos.stream()
+                      .forEach(p-> System.out.println("\t" + p));
+
+
+          });
 
 
 
